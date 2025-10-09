@@ -1,4 +1,5 @@
 const Category = require("../Model/Category");
+const Course = require("../Model/Course");
 
 
 
@@ -44,20 +45,35 @@ exports.createCategory = async (req, res) => {
 
 exports.showAllCategories = async (req, res) => {
   try {
-    const allCategories = await Category.find().populate("courses");
-    console.log(allCategories);
-    const categoriesWithPublishedCourses = allCategories.filter((category) =>
-      category.courses.some((course) => course.status === "Published")
-    );// some function return krta h ki koi ek course ka status published h ya nhii agr hain to vo course return krdega
-    res.status(200).json({
-      success: true,
-      data: categoriesWithPublishedCourses,
+    // Find categories that actually have published courses by querying Course collection
+    const publishedCourses = await Course.find({ status: "Published" }, { category: 1 }).lean();
+    const categoryIds = [...new Set(publishedCourses.map((c) => String(c.category)))].filter(Boolean);
+
+    if (categoryIds.length === 0) {
+      return res.status(200).json({ success: true, data: [] });
+    }
+
+    const categories = await Category.find({ _id: { $in: categoryIds } }).populate({
+      path: "courses",
+      match: { status: "Published" },
     });
+
+    res.status(200).json({ success: true, data: categories });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: error.message,
     });
+  }
+};
+
+// public endpoint to return all categories (used by admin/instructor forms)
+exports.getAllCategories = async (req, res) => {
+  try {
+    const allCategories = await Category.find();
+    res.status(200).json({ success: true, data: allCategories });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 

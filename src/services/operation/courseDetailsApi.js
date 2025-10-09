@@ -1,13 +1,11 @@
 import { toast } from "react-hot-toast"
 
-import { updateCompletedLectures } from "../../slices/viewCourseSlice";
-
 import { apiConnector } from "../apiConnector";
-import { courseEndpoints } from "../apis";
+import { courseEndpoints, categories as categoriesApi } from "../apis";
 
 const {
   COURSE_DETAILS_API,
-  COURSE_CATEGORIES_API,
+  
   GET_ALL_COURSE_API,
   CREATE_COURSE_API,
   EDIT_COURSE_API,
@@ -69,7 +67,8 @@ export const fetchCourseDetails = async (courseId) => {
 export const fetchCourseCategories = async () => {
   let result = []
   try {
-    const response = await apiConnector("GET", COURSE_CATEGORIES_API)
+    // fetch all categories (including empty/new ones) for course creation
+    const response = await apiConnector("GET", categoriesApi.GET_ALL_CATEGORIES_API)
     console.log("COURSE_CATEGORIES_API API RESPONSE............", response)
     if (!response?.data?.success) {
       throw new Error("Could Not Fetch Course Categories")

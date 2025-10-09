@@ -22,6 +22,7 @@ import Cart from './components/core/dashboard/cart/Cart';
 import { ACCOUNT_TYPE } from './utils/constants'; 
 import { useSelector } from 'react-redux';
 import AddCourse from './components/core/dashboard/AddCourse';
+import AddCategory from './components/core/dashboard/AddCategory';
 import MyCourses from './components/core/dashboard/MyCourses';
 import EditCourse from './components/core/dashboard/EditCourse/EditCourse';
 import { CatalogPage } from './pages/CatalogPage';
@@ -63,6 +64,10 @@ function App() {
 
   {user?.accountType === ACCOUNT_TYPE.INSTRUCTOR && (
     <Route path="/dashboard/add-course" element={<AddCourse />} />
+  )}
+
+  {user?.accountType === ACCOUNT_TYPE.ADMIN && (
+    <Route path="/dashboard/add-category" element={<AddCategory />} />
   )}
 
 {user?.accountType === ACCOUNT_TYPE.INSTRUCTOR && (

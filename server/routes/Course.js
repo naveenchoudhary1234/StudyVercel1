@@ -15,6 +15,7 @@ const {
   showAllCategories,
   createCategory,
   categoryPageDetails,
+  getAllCategories,
 } = require("../controllers/Category");
 
 const {
@@ -76,6 +77,7 @@ router.delete("/deleteCourse", deleteCourse);
 
 router.post("/createCategory", auth, isAdmin, createCategory);
 router.get("/showAllCategories", showAllCategories);
+router.get("/getAllCategories", getAllCategories);
 router.post("/getCategoryPageDetails", categoryPageDetails);
 
 router.post("/createRating", auth, isStudent, createRating);
